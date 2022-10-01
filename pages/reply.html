@@ -23,6 +23,40 @@
             color: transparent;
         }
 
+
+.card{
+    width: 900px;
+    border: none;
+    border-radius: 15px;
+}
+.adiv{
+    background: #04CB28;
+    border-radius: 15px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    font-size: 12px;
+    height: 46px;
+}
+.chat{
+    border: none;
+    background: #E2FFE8;
+    font-size: 20px;
+    border-radius: 20px;
+}
+.bg-white{
+    border: 1px solid #E7E7E9;
+    font-size: 20px;
+    border-radius: 20px;
+}
+.myvideo img{
+    border-radius: 20px
+}
+
+
+.form-control:focus{
+    box-shadow: none;
+    }
+
        
     </style>
     
@@ -56,11 +90,12 @@
             </div>
         </div>
     </nav>
-<div class="mt-4" style="font-weight:bold;">
-    <form  action="sendreply" method="post" >
-        <h2>Query Detail</h2>
-        {% csrf_token %}
+
+<div class="mt-4" style="margin-left: 20%;" >
 {% for i in res %}
+<a href="close?qid={{i.queryid}}"><button class="btn btn-danger btn-md">Close Query</button></a>
+    <form  action="sendreply" method="post" >
+        {% csrf_token %}
 <div class="row ">
     <div class="col-4">
     Query ID<input type="number" name="queryid"value="{{i.queryid}}" class="form-control" readonly>
@@ -71,15 +106,73 @@
 </div>
 <div class="row " >
     <div class="col-4">
+        {% for k in res2 %}
+    Name<input type="email" name="email"value="{{k.fname}} {{k.mname}} {{k.lname}}" class="form-control" readonly>
+    
+    </div>
+    <div class="col-4">
     Email<input type="email" name="email"value="{{i.email}}" class="form-control" readonly>
     </div>
+</div>
+    <div class="row " >
      <div class="col-4">
-    Original Query<textarea rows="4" name="description" class="form-control" readonly>{{i.description}}</textarea>
+    Original Query<textarea rows="2" name="description" class="form-control" readonly>{{i.description}}</textarea>
     </div>
+
+</div>
 </div>
 
+
+
+
+
+<div class="container d-flex justify-content-center">
+  <div class="card mt-5">
+    <div class="d-flex flex-row justify-content-between p-3 adiv text-white">
+      <i class="fas fa-chevron-left"></i>
+      <span class="pb-3">Chat With Agent</span>
+      <i class="fas fa-times"></i>
+    </div>
+    <div class="d-flex flex-row p-3" >
+        <div class="bg-white mr-2 p-3"><span class="text-muted">{{i.description}}</span></div>
+        <img src="https://img.icons8.com/color/48/000000/circled-user-male-skin-type-7.png" width="40" height="40">
+      </div>
+      {% endfor %}
+
+    {% for j in res1 %}
+    {% if j.replymode == "Admin" %}
+      <div class="d-flex flex-row p-3">
+        <img src="https://icons.iconarchive.com/icons/aha-soft/free-large-boss/512/Admin-icon.png" width="40" height="40">
+        <div class="chat ml-2 p-3">{{j.description}}</div>
+      </div>
+      {% endif %}
+
+      {% if j.replymode == "User" %}
+      <div class="d-flex flex-row p-3" >
+        <div class="bg-white mr-2 p-3"><span class="text-muted">{{j.description}}</span></div>
+        <img src="https://img.icons8.com/color/48/000000/circled-user-male-skin-type-7.png" width="40" height="40">
+      </div>
+      {% endif %}
+      {% endfor %}
+      <div class="form-group px-3">
+        <textarea class="form-control" required rows="5" name="rdescription" placeholder="Type your message"></textarea>
+        <input type="submit" value="Reply" class="btn btn-success" style="float:right; margin-top:10px;" >
+      </div>
+  </div>
+</div>
+</form>
+</div>
+</div>
+</body>
+</html>
+
+
+
+
+<!--
+    {% for i in res %}
 <table class="table table-success table-striped">
-    <tr><center><h2>Chats</h2></center></tr>
+    <tr><center><h2>Chat</h2></center></tr>
     <tr>
         <th style="width:100px;">Reply By</th>
         <th>Reply Description</th>
@@ -94,8 +187,9 @@
 <div class="row ">
     
      <div class="col-8">
-    Reply Description<textarea  rows="5" name="rdescription" class="form-control" required ></textarea>
+    Reply Description<textarea  rows="5" name="rdescription" class="form-control" value=" " required >Hii,{{k.fname}} Thank you for Contacting me.</textarea>
     </div>
+    {% endfor %}
     </div>
     <div class="row mt-4">
     
@@ -112,5 +206,4 @@
 {% endfor %}
     </div>
 
-</body>
-</html>
+-->

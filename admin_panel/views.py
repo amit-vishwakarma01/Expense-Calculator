@@ -1,7 +1,9 @@
 from django.shortcuts import render,redirect
+from django.http import HttpResponseRedirect
 from Expenses.models import expense_type,query,replies
 # Create your views here.
 from .models import admin_login
+from authentication.models import user_detail
 import random
 def adminlogin(request):
 	error=""
@@ -51,10 +53,15 @@ def queries(request):
 	return redirect('admin_panel')
 def reply(request):
 	if request.session.get('admin'):
+		
 		qid=request.GET['qid']
 		res=query.objects.filter(queryid=qid)
+		email=""
+		for i in res:
+			email=i.email
+		res2=user_detail.objects.filter(email=email)
 		res1=replies.objects.filter(queryid=qid)
-		return render(request,"reply.html",{'res':res,'res1':res1})
+		return render(request,"reply.html",{'res':res,'res1':res1,'res2':res2})
 	return redirect('admin_panel')
 def sendreply(request):
 	if request.session.get('admin'):
@@ -68,7 +75,8 @@ def sendreply(request):
 			replyid=random.randint(100000,999999)
 		res=replies(queryid=queryid,email=email,replymode="Admin",replyid=replyid,subject=subject,description=rdescription)
 		res.save()
-		return redirect('queries')
+
+		return HttpResponseRedirect("reply?qid="+queryid)
 	return redirect('admin_panel')
 def close(request):
 	if request.session.get('admin'):

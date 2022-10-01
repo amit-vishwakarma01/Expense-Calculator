@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from authentication.models import user_detail
+from django.http import HttpResponseRedirect
 from .models import expense_type,expense_detail,query,replies
 import datetime,random
 from datetime import date
@@ -327,7 +328,7 @@ def senduserreply(request):
 			replyid=random.randint(100000,999999)
 		res=replies(queryid=queryid,email=email,replymode="User",replyid=replyid,subject=subject,description=rdescription)
 		res.save()
-		return redirect('userquery')
+		return HttpResponseRedirect("userreply?qid="+queryid)
 	return redirect('dashboard')
 
 
